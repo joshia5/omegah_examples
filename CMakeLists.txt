@@ -30,4 +30,6 @@ function(example exename srcname)
 endfunction(example)
 
 example(firstOrderAdjacency firstOrderAdjacency.cpp)
+example(tags tags.cpp)
 include(testing.cmake)
+
