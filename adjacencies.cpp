@@ -18,5 +18,6 @@ int main(int argc, char** argv) {
   const auto dim = mesh.dim();
   auto edge2verts = mesh.get_adj(1,0);
   auto n_edge = mesh.nedges();
+  assert(edge2verts.ab2b.size() == 2*n_edge);
   return 0;
 }
