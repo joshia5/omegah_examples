@@ -6,5 +6,4 @@ function(mpi_test TESTNAME PROCS EXE)
 endfunction(mpi_test)
 
 mpi_test(firstOrderAdj_2D 1  ./firstOrderAdjacency  ${CMAKE_SOURCE_DIR}/meshes/tri8.osh)
-mpi_test(tags_2D 1  ./tags  ${CMAKE_SOURCE_DIR}/meshes/tri8.osh)
 mpi_test(adjacencies_2D 1  ./adjacencies  ${CMAKE_SOURCE_DIR}/meshes/tri8.osh)
