@@ -16,8 +16,19 @@ int main(int argc, char** argv) {
   Omega_h::Mesh mesh(&lib);
   Omega_h::binary::read(inmesh, lib.world(), &mesh);
   const auto dim = mesh.dim();
-  auto edge2verts = mesh.get_adj(1,0);
+
   auto n_edge = mesh.nedges();
+  auto edge2verts = mesh.get_adj(1,0);
   assert(edge2verts.ab2b.size() == 2*n_edge);
+
+  auto n_face = mesh.nfaces();
+  auto face2edges = mesh.get_adj(2,1);
+  assert(face2edges.ab2b.size() == 3*n_face);
+
+  if (dim == 3) {
+    auto n_cell = mesh.nelems();
+    auto cell2faces = mesh.get_adj(3,2);
+    assert(cell2faces.ab2b.size() == 4*n_cell);
+  }
   return 0;
 }
