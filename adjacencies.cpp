@@ -29,6 +29,14 @@ int main(int argc, char** argv) {
     auto n_cell = mesh.nelems();
     auto cell2faces = mesh.get_adj(3,2);
     assert(cell2faces.ab2b.size() == 4*n_cell);
+    auto face2cell = mesh.ask_up(2,3);
+    assert(face2cell.ab2b.size() == 4*n_cell);
   }
+
+  auto vert2edges = mesh.ask_up(0,1);
+  assert(vert2edges.ab2b.size() == 2*n_edge);
+
+  auto edge2face = mesh.ask_up(1,2);
+  assert(edge2face.ab2b.size() == 3*n_face);
   return 0;
 }
