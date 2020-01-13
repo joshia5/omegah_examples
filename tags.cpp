@@ -1,7 +1,6 @@
 #include <Omega_h_file.hpp>
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
-#include <Omega_h_tag.hpp>
 
 int main(int argc, char** argv) {
   auto lib = Omega_h::Library(&argc, &argv);
@@ -14,10 +13,14 @@ int main(int argc, char** argv) {
   Omega_h::Mesh mesh(&lib);
   Omega_h::binary::read(inmesh, lib.world(), &mesh);
   const auto dim = mesh.dim();
+  auto nvert = mesh.nverts(); 
 
-  if(!rank) {
-	mesh.add_tag(0, "gravity", 0, 9.81);
-	mesh.set_tag(0, "gravity", 10);
-	mesh.remove_tag(0, "gravity");
-  }
+  double gravity[nvert] = {0.0};
+  //double gravity[nvert][dim] = {0.0};
+  mesh.add_tag<double>(0, "gravity", 1, gravity, 0);
+  Omega_h::binary::write("/users/joshia5/omegah_examples/new_mesh/tag.osh", &mesh);
+ //mesh.set_tag<double>(0, "gravity", gravity);
+ // mesh.remove_tag(0, "gravity");
+
+  return 0;
 }

@@ -31,4 +31,5 @@ endfunction(example)
 
 example(firstOrderAdjacency firstOrderAdjacency.cpp)
 example(adjacencies adjacencies.cpp)
+example(tags tags.cpp)
 include(testing.cmake)

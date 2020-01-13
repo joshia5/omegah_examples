@@ -2,7 +2,7 @@
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
 #include <iostream>
-#include <string>
+#include <array>
 using namespace	std;
 
 int main(int argc, char** argv) {
@@ -34,9 +34,14 @@ int main(int argc, char** argv) {
   }
 
   auto vert2edges = mesh.ask_up(0,1);
+  auto a2ab = vert2edges.a2ab;
+  int lastVal;
+  Kokkos::deep_copy(lastVal,Kokkos::subview(a2ab.view(),69104));
+  assert(lastVal <= 2*n_edge);
   assert(vert2edges.ab2b.size() == 2*n_edge);
 
   auto edge2face = mesh.ask_up(1,2);
+//  cout << "here  " << edge2face.ab2b.size() << "face " << n_face << "edge " << n_edge << endl;
   assert(edge2face.ab2b.size() == 3*n_face);
   return 0;
 }
