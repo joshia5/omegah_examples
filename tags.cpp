@@ -17,9 +17,9 @@ int main(int argc, char** argv) {
 
   double gravity[nvert] = {0.0};
   //double gravity[nvert][dim] = {0.0};
-  mesh.add_tag<double>(0, "gravity", 1, gravity, 0);
+  mesh.add_tag<double>(0, "gravity", 0);
+  mesh.set_tag<double>(0, "gravity", gravity);
   Omega_h::binary::write("/users/joshia5/omegah_examples/new_mesh/tag.osh", &mesh);
- //mesh.set_tag<double>(0, "gravity", gravity);
  // mesh.remove_tag(0, "gravity");
 
   return 0;
