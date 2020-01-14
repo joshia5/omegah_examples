@@ -29,7 +29,6 @@ function(example exename srcname)
   target_link_libraries(${exename} Omega_h::omega_h)
 endfunction(example)
 
-example(firstOrderAdjacency firstOrderAdjacency.cpp)
 example(adjacencies adjacencies.cpp)
 example(tags tags.cpp)
 include(testing.cmake)

@@ -30,9 +30,6 @@ AQAAAAAAAAAJAAAAAAAAAAkAAAAAAAAACwAAAAAAAAA=eAFjYIACAAAJAAE=
 <DataArray type="Int32" Name="class_id" NumberOfComponents="1" format="binary">
 AQAAAAAAAAAkAAAAAAAAACQAAAAAAAAAIAAAAAAAAAA=eAETZmBg4AdibiDmAmI2IOYBYgEgFgFiJiAGAAl0AHA=
 </DataArray>
-<DataArray type="Float64" Name="gravity" NumberOfComponents="1" format="binary">
-AQAAAAAAAABIAAAAAAAAAEgAAAAAAAAADAAAAAAAAAA=eAFjYKAOAAAASAAB
-</DataArray>
 </PointData>
 <CellData>
 <DataArray type="Int64" Name="global" NumberOfComponents="1" format="binary">
