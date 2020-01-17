@@ -1,8 +1,6 @@
 #include <Omega_h_file.hpp>
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
-#include <iostream>
-#include <array>
 using namespace	std;
 
 int main(int argc, char** argv) {
