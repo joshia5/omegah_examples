@@ -43,25 +43,29 @@ int main(int argc, char** argv) {
     }
   }*/
 
-  //get ids of verts of that cell (how to copy multiple values at a time?)
   auto cell2vert = mesh.ask_elem_verts();
-  int cell_verts_id[(numPts*4)*dim];
-  for (int i=0; i<dim; ++i) {
-    Kokkos::deep_copy(cell_verts_id[(numPts-1)+i],Kokkos::subview(cell2vert.view(),4*cell_ID[numPts-1]+i));
-  }
- // Kokkos::deep_copy(cell_verts_id[1],Kokkos::subview(cell2vert.view(),4*cell_ID[0]+1));
-  //Kokkos::deep_copy(cell_verts_id[2],Kokkos::subview(cell2vert.view(),4*cell_ID[0]+2));
-  //Kokkos::deep_copy(cell_verts_id[3],Kokkos::subview(cell2vert.view(),4*cell_ID[0]+3));
-
-  //get coordinates of the vertices {a,b,c,d}
   auto vert_coords = mesh.coords();
-  double cell_verts_coords[4*dim];
-  Kokkos::deep_copy(cell_verts_coords[0],Kokkos::subview(vert_coords.view(),cell_verts_id[0]));//what about x,y,z?
-  Kokkos::deep_copy(cell_verts_coords[1],Kokkos::subview(vert_coords.view(),cell_verts_id[1]));
-  Kokkos::deep_copy(cell_verts_coords[2],Kokkos::subview(vert_coords.view(),cell_verts_id[2]));
-  Kokkos::deep_copy(cell_verts_coords[3],Kokkos::subview(vert_coords.view(),cell_verts_id[3]));
+  int cell_verts_id[(numPts*4)];
+  double cell_verts_coords[numPts*4*dim];
+  for (int j=0; j<numPts; ++j) {
+    for (int i=0; i<4; ++i) {
+      Kokkos::deep_copy(cell_verts_id[j+i],
+	Kokkos::subview(cell2vert.view(),cell_ID[j]+i));//get vertex IDs for each cell
+      for (int k=0; k<dim; ++k) {
+        Kokkos::deep_copy(cell_verts_coords[j+i+k],
+	  Kokkos::subview(vert_coords.view(),cell_ID[j]+i+k));//get coords of the vertices of each cell
+      }
+    }
+  }
+
   //routine to calculate b.centric coords for tet. and also inturn calculate is in or out of cell "https://people.sc.fsu.edu/~jburkardt/presentations/cg_lab_barycentric_tetrahedrons.pdf"
   // for each face get normal and calc b.centric coord for that face as (dot((p-b).n)/dot((a-b).n))
+  int j = 0;
+  for (int i=0; i<4; ++i) { 
+    for (int k=0; k<dim; ++k) {
+      n[i+k] = cross(cell_verts_coords[j+i+k+1]
+    }
+  }
   // example of normal auto normal = normalize(cross((b - a), (c - a))) in r3d_test.cpp;
   //look at dot and cross in vector.hpp
   return 0;
