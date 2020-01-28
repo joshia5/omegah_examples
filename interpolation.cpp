@@ -17,18 +17,19 @@ int main(int argc, char** argv) {
   binary::read(inmesh, lib.world(), &mesh);
   const auto dim = mesh.dim();
 
-  const int numPts = 1;
-  Read <LO> elmIds(numPts, 0, "elmIds");
-  Read <Real> p(numPts*3, 0.0, "p");
+  const int numPts = mesh.nelems();
   const int verts_per_tet = 4;
   auto cell2vert = mesh.ask_elem_verts();
   auto vert_coords = mesh.coords();
+  Write <LO> elmIds_w(numPts, "elmIds");
+  Write <Real> p_w(numPts*3, "p");
 
-  auto f = OMEGA_H_LAMBDA(LO i) {
+  auto f_in = OMEGA_H_LAMBDA(LO i) {
     Real a[3], b[3], c[3], d[3]; 
     Real cell_verts_coords[verts_per_tet*3];
+    elmIds_w[i] = i;
     for (int j=0; j<verts_per_tet; ++j) {
-      const LO cell_vert_id = cell2vert[verts_per_tet*(elmIds[i])+j];
+      const LO cell_vert_id = cell2vert[verts_per_tet*elmIds_w[i]+j];
       for (int k=0; k<dim; ++k) {
         cell_verts_coords[dim*j+k] = vert_coords[cell_vert_id*dim+k];
       }
@@ -38,15 +39,35 @@ int main(int argc, char** argv) {
       b[k] = cell_verts_coords[k+3];
       c[k] = cell_verts_coords[k+6];
       d[k] = cell_verts_coords[k+9];
-//      p[k] = d[k];
-//      p[k] = (a[k]+b[k]+c[k]+d[k])/verts_per_tet;
+//      p_w[i*dim+k] = (a[k]+b[k]+c[k]+d[k])/verts_per_tet;
+      p_w[i*dim+k] = a[k];
+    }
+  };
+  parallel_for(numPts, f_in, "barycentric_coords");
+  Read <LO> elmIds(elmIds_w);
+  Read <Real> p(p_w);
+
+  auto f = OMEGA_H_LAMBDA(LO i) {
+    Real a[3], b[3], c[3], d[3]; 
+    Real cell_verts_coords[verts_per_tet*3];
+    for (int j=0; j<verts_per_tet; ++j) {
+      const LO cell_vert_id = cell2vert[verts_per_tet*elmIds[i]+j];
+      for (int k=0; k<dim; ++k) {
+        cell_verts_coords[dim*j+k] = vert_coords[cell_vert_id*dim+k];
+      }
+    }
+    for (int k=0; k<dim; ++k) {
+      a[k] = cell_verts_coords[k];
+      b[k] = cell_verts_coords[k+3];
+      c[k] = cell_verts_coords[k+6];
+      d[k] = cell_verts_coords[k+9];
     }
 
     auto a_v = vector_3(a[0], a[1], a[2]);
     auto b_v = vector_3(b[0], b[1], b[2]);
     auto c_v = vector_3(c[0], c[1], c[2]);
     auto d_v = vector_3(d[0], d[1], d[2]);
-    auto p_v = vector_3(p[0], p[1], p[2]);
+    auto p_v = vector_3(p[i*dim+0], p[i*dim+1], p[i*dim+2]);
 
     auto normal_a = normalize(get_triangle_normal(b_v,c_v,d_v));
     auto normal_b = -normalize(get_triangle_normal(a_v,c_v,d_v));
@@ -58,7 +79,7 @@ int main(int argc, char** argv) {
     auto xi_c = ((p_v-d_v)*normal_c)/((c_v-d_v)*normal_c);
     auto xi_d = ((p_v-a_v)*normal_d)/((d_v-a_v)*normal_d);
 
-    printf("Barycentric coordinates are %f %f %f %f \n", xi_a, xi_b, xi_c, xi_d);
+    printf("For cell index %d Barycentric coordinates are %f %f %f %f \n", i, xi_a, xi_b, xi_c, xi_d);
   };
   parallel_for(numPts, f, "barycentric_coords");
 
