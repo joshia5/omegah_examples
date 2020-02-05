@@ -5,6 +5,26 @@
 #include <Omega_h_mark.hpp>
 using namespace Omega_h;
 
+Read<LO> rev_classify_cells(Mesh mesh, int model_ent_dim, int model_ent_id) {
+
+  auto vertsOnModelEnt = mark_by_class(&mesh, 0, model_ent_dim, model_ent_id);
+  auto vert_vert2elem = mesh.ask_up(0,3).a2ab;
+  auto elem_vert2elem = mesh.ask_up(0,3).ab2b;
+  Write<LO> cellOnModelEnt(mesh.nelems(), 0, "cellOnModelEnt");
+  
+  auto classifyCells = OMEGA_H_LAMBDA(LO i) {
+    if (vertsOnModelEnt[i] > 0) {
+      for (int j = vert_vert2elem[i]; j < vert_vert2elem[i+1]; ++j) {
+        auto cell_id = elem_vert2elem[j];
+	cellOnModelEnt[cell_id] = 1;
+      }
+    }
+  };
+  parallel_for(mesh.nverts(), classifyCells, "classifyCells");
+  Read<LO> cellOnModelEnt_r(cellOnModelEnt);
+  return cellOnModelEnt_r;
+}
+
 int main(int argc, char** argv) {
   auto lib = Omega_h::Library(&argc, &argv);
   if(argc!=2) {
@@ -17,22 +37,17 @@ int main(int argc, char** argv) {
   Omega_h::binary::read(inmesh, lib.world(), &mesh);
   const auto dim = mesh.dim();
 
-  //get face id for model face
-  //?
+  int model_ent_id = 91;
+  int model_ent_dim = 3;
+  Read<LO> cellOnModelEnt = rev_classify_cells(mesh, model_ent_dim, model_ent_id);
+  mesh.add_tag<LO>(dim, "cellsOnEnt", 1, cellOnModelEnt);
+  binary::write("./rev_class.osh", &mesh);
 
-  //get mesh face for that model face(currently for all model faces)
-  auto exposed_sides = mark_exposed_sides(&mesh);
-  auto side_side2elem = mesh.ask_up(2,3).a2ab;
-  auto elem_side2elem = mesh.ask_up(2,3).ab2b;
-  auto f = OMEGA_H_LAMBDA(LO i) {
-  //identify elements on those faces
-    if (exposed_sides[i] > 0) {
-      auto index = side_side2elem[i];
-      auto cell_id = elem_side2elem[index];
-    }
-  };
-  parallel_for(mesh.nfaces(),f,"f");
-  //Look at following cpps assoc, mark, maybe surface
-  //classify_sides_by_exposure; takes input exposed sides and returns uique identifier value in class_dim
+  model_ent_id = 1;
+  model_ent_dim = 2;
+  Read<LO> cellOnModelEnt2 = rev_classify_cells(mesh, model_ent_dim, model_ent_id);
+  mesh.add_tag<LO>(dim, "cellsOnEnt", 1, cellOnModelEnt2);
+  binary::write("./rev_class2.osh", &mesh);
+
   return 0;
 }
