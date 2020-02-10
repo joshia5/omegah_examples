@@ -69,6 +69,9 @@ cd build-ohExamples-pascal
 make
 ctest
 ```
+
+# Example Descriptions
+
 ## Terminology
 - Topological Complex - A breakdown of a Cartesian domain into topological entities
 - Mesh - A topological complex whose entities have simple shape
