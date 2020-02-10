@@ -70,25 +70,25 @@ make
 ctest
 ```
 ## Terminology
-Topological Complex - A breakdown of a Cartesian domain into topological entities
-Mesh - A topological complex whose entities have simple shape
-Entity - A topological entity of a mesh
-Vertex - A 0-dimensional entity
-Edge - A 1-dimensional entity
-Face - A 2-dimensional entity
-Region - A 3-dimensional entity
-Element - An entity not bounding another entity
-Mesh discretization - Subdivision of a continuous geometric space into discrete geometric and topological cells
-Model(CAD) - A topological complex consisting of vertices, edges, faces and regions from which a mesh is generated via mesh discretization
-Adjacency - If a point set b bounds a point set a, then there is a downward adjacency (a, b) an upward adjacency (b, a)
-Barycentric coordinate system - A coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of usually unequal masses placed of the coordinates of its vertices (from Wikipedia)
-Classification - A direct mapping from mesh entities to geometric (CAD) model entities
+- Topological Complex - A breakdown of a Cartesian domain into topological entities
+- Mesh - A topological complex whose entities have simple shape
+- Entity - A topological entity of a mesh
+- Vertex - A 0-dimensional entity
+- Edge - A 1-dimensional entity
+- Face - A 2-dimensional entity
+- Region - A 3-dimensional entity
+- Element - An entity not bounding another entity
+- Mesh discretization - Subdivision of a continuous geometric space into discrete geometric and topological cells
+- Model(CAD) - A topological complex consisting of vertices, edges, faces and regions from which a mesh is generated via mesh discretization
+- Adjacency - If a point set b bounds a point set a, then there is a downward adjacency (a, b) an upward adjacency (b, a)
+- Barycentric coordinate system - A coordinate system in which the location of a point of a simplex (a triangle, tetrahedron, etc.) is specified as the center of mass, or barycenter, of usually unequal masses placed of the coordinates of its vertices (from Wikipedia)
+- Classification - A direct mapping from mesh entities to geometric (CAD) model entities
 
 ## Outline
 We aim to develop functions or tests which will aid in mesh operations and other common related tasks, using the functionalities and API of Omega_h. Tests are developed for adjacency queries, modifying data related to mesh entities, calculation of barycentric coordinates, reverse classification and data reduction in parallel. More tests focusing on parallel execution like synchronizing data on process boundary, mesh-repartitioning and creating ghost elements are in the pipeline. More details can be found below.
 
 ## Summary
-By taking the mesh file as an input, following tests are written:
+Following tests, which require the mesh file as an input, are developed:
 - adjacencies - Given a mesh, query the first order downward (edge to vertex, face to edge, element to face) and upward (vertex to edge, edge to face and face to element), and second order (vertex to vertex via edge) adjacencies.
 
 - tags - Given a mesh, create, modify, and delete data associated with mesh entities and write mesh files for visualization
