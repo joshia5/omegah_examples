@@ -2,6 +2,7 @@
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
 using namespace	std;
+using namespace	Omega_h;
 
 int main(int argc, char** argv) {
   auto lib = Omega_h::Library(&argc, &argv);
@@ -11,8 +12,8 @@ int main(int argc, char** argv) {
   }
   const auto rank = lib.world()->rank();
   const auto inmesh = argv[1];
-  Omega_h::Mesh mesh(&lib);
-  Omega_h::binary::read(inmesh, lib.world(), &mesh);
+  Mesh mesh(&lib);
+  binary::read(inmesh, lib.world(), &mesh);
   const auto dim = mesh.dim();
 
   if(!rank) {
