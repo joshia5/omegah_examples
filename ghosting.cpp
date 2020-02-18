@@ -21,6 +21,5 @@ int main(int argc, char** argv) {
   mesh.set_parting(OMEGA_H_GHOSTED, 1, 1);
   MPI_Barrier(MPI_COMM_WORLD);
 
-  // create 3d partitioned mesh?
   return 0;
 }
