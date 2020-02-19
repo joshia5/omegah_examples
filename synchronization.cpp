@@ -16,12 +16,12 @@ int main(int argc, char** argv) {
   const auto dim = mesh.dim();
 
   mesh.add_tag<Real>(0, "gravity", 1);
-  if (!rank) {
+  if (rank==2) {
     Write<Real> gravityArray(mesh.nverts(), 9.81, "gravityArray");
     Read<Real> gravityArray_r(gravityArray);
     mesh.set_tag<Real>(0, "gravity", gravityArray_r);
   }
-  else if (rank) {
+  else {
     Write<Real> gravityArray(mesh.nverts(), 0.0, "gravityArray");
     Read<Real> gravityArray_r(gravityArray);
     mesh.set_tag<Real>(0, "gravity", gravityArray_r);

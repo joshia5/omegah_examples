@@ -103,23 +103,21 @@ Following tests, which require the mesh file as an input, are developed:
 parallel:
 - reduction - Given a partitioned mesh, compute the maximum value of a tag across all processes
 
-- tag synchronization - synchronize a vertex tag such that owners of vertices on the part boundary send their values to non-owned copies on other processes
-***More to follow***
+- synchronization - synchronize a vertex tag such that owners of vertices on the part boundary send their values to non-owned copies on other processes
 
 - partitioning - define weights associated with mesh elements and repartition(balance) the mesh according to those weights
-***More to follow***
 
 - ghosting - create a single layer of ghost elements with mesh vertices (in 3D) defined as the bridge entity
-***More to follow***
 
 ## Details about the tests (assertion, results, new APIs, objects and concepts used) 
 
 - adjacencies - The user input is the mesh file. By using 'get_adj' from the host, we can get the downward adjacencies and 'ask_up' can be called from host for upward adjacencies.  'ask_star' can be called from host to query second order vertex to vertex adjacency. Furthermore in this test, the function 'dim()' can be called from host to get dimensions (2D/3D) of mesh, 'nglobal_ents(arg)' can be called from host to get the global number of entities of 'arg' dimension, similar to 'nverts()', 'nfaces()', etc. For testing the queries, assertions are used to compare the size of the list array returned by the adjacency query, to the expected size. For instance, in a edge to vertex downward adjacency query, since each edge has two vertices the size of the list array which stores the vertices for each edge should be twice the total number of edges. When we query the upward adjacency vertex to edge, the size of the list array will also be twice the number of edges because of the reverse of graph from edge to vertex since all the edges are bounded by two vertices. Similar argument is made for the assertion implemented for the second order vertex to vertex adjacency query. Each omega_h function/api/class used can be called from the host (outside a kernel) or on the device (within a kernel, e.g., in the body of a parallel_for).  Also the host functions operate on large arrays of data, typically all entities of a specified dimension stored on the local process while device functions operate on small arrays of data, typically associated with a single mesh entity
 
-- tags - User input is the mesh file. 'Read' and 'Write' array structure of Omega_h called from host is used for setting the values for the tag. 'Write' can be called from host to declare and/or initialize arrays of integer(LO) or double(Real) type. For example the 'Write' given below creates array 'gravityArray' of type Real(double) of size 'nvert' and initializes to '9.81'. The 'Read' converts this same array to a read-only 'gravityArray_r'.:
+- tags - User input is the mesh file. 'Read' and 'Write' array structure of Omega_h called from host is used for setting the values for the tag. 'Write' can be called from host to declare and/or initialize arrays of integer(LO) or double(Real) type. For example the 'Write' given below creates array 'gravityArray' of type Real(double) of size 'nvert' and initializes to '9.81'. The 'Read' converts this same array to a read-only 'gravityArray_r'. To copy a Read array from host to device, 'Write<T> deep_copy' can be called from the host.:
 ```
 Omega_h::Write<Omega_h::Real> gravityArray(nvert, 9.81, "gravityArray");
 Omega_h::Read<Omega_h::Real> gravityArray_r(gravityArray);
+auto gravity_device = Write<Real> deep_copy(gravityArray_r, "gravity_device");
 ```
 'add_tag' can be called from host to create a new variable or tag which is associated with each of the mesh entities(all vertices, all edges,etc.) associated with a dimension-specified via arguments. The values of this tag are specified by calling 'set_tag' from the host which will take an input argument of an array consisting of all the values to be assigned to all the entities for which that particular tag exists. The information about the tags can be deleted by calling 'remove_tag' from the host. The mesh file is written to visualize the results by calling 'binary::write' from the host. This writes a .osh file which needs to be converted to .vtk for visualization.
 
@@ -129,9 +127,9 @@ Omega_h::Read<Omega_h::Real> gravityArray_r(gravityArray);
 
 - classification - This test can also be called as reverse classification. A function is written which returns a flag representing whether or not a cell of a given mesh is classified on the model entity having certain ID and dimension. The 'mark_by_class' is called from host which returns all vertices classified by a particular model entity and the corresponding elements are flagged using upward adjacency relations.
 
-- reduction - Each process will load one part of the mesh. The 'get_max' function is called from host which will return either local or global max of input argument array.
+- reduction - Each process will load one part of the mesh. The 'get_max' function is called from host which will return either global max of input argument array.
 
-- synchronization - 'sync_array' is being studied
-***More to follow***
+- synchronization - 'sync_tag' can be called from host to synchronize the values of tags, for the entities lying on process boundry. 'vtk::write_parallel' can be called to write mesh for parallel code.
+
 - partitioning - ***More to follow***
 - ghosting - ***More to follow***
