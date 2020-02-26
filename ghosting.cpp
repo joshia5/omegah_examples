@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
   const auto comm = lib.world();
 
   MPI_Barrier(MPI_COMM_WORLD);  
-  //mesh::nghost_layers, set_parting(omega_h_ghosted)
+  //look at mesh::nghost_layers, set_parting(omega_h_ghosted)
   mesh.set_parting(OMEGA_H_GHOSTED, 1, 1);
   MPI_Barrier(MPI_COMM_WORLD);
 
