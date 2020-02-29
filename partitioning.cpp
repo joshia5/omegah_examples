@@ -17,22 +17,26 @@ int main(int argc, char** argv) {
 
   //define weights or tag, etc. i.e. generate metric, generte metric tag, add metric tag
   mesh.add_tag<Real>(0, "metric", 1);
-  if ((!rank) || (rank == 1)) {
+  Write<Real> metricArray(mesh.nverts(), rank, "metricArray");
+  auto metricArray_r = Reals(metricArray);
+  mesh.set_tag<Real>(0, "metric", metricArray_r);
+/*  if (!rank) {
     Write<Real> metricArray(mesh.nverts(), 1, "metricArray");
-    Read<Real> metricArray_r(metricArray);
+    auto metricArray_r = Reals(metricArray);
     mesh.set_tag<Real>(0, "metric", metricArray_r);
   }
-  else if ((rank == 2) || (rank ==3)) {
+  else {
     Write<Real> metricArray(mesh.nverts(), 0, "metricArray");
-    Read<Real> metricArray_r(metricArray);
+    auto metricArray_r = Reals(metricArray);
     mesh.set_tag<Real>(0, "metric", metricArray_r);
   }
-
+*/
   //repartition mesh as per weights 
   MPI_Barrier(MPI_COMM_WORLD);
+  mesh.sync_tag(0,"metric");
   mesh.balance(1);
-  vtk::write_parallel("/users/joshia5/omegah_examples/new_mesh/balance.vtk", &mesh, false);
+  vtk::write_parallel("/users/joshia5/new_mesh/balance.vtk", &mesh, false);
 
-  //eg. in 1dtest.cpp
+  //eg. in slope test.cpp
   return 0;
 }
