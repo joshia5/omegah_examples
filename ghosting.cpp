@@ -16,10 +16,10 @@ int main(int argc, char** argv) {
   const auto rank = lib.world()->rank();
   const auto comm = lib.world();
 
-  MPI_Barrier(MPI_COMM_WORLD);  
-  //look at mesh::nghost_layers, set_parting(omega_h_ghosted)
+  MPI_Barrier(MPI_COMM_WORLD); 
   mesh.set_parting(OMEGA_H_GHOSTED, 1, 1);
   MPI_Barrier(MPI_COMM_WORLD);
+  vtk::write_parallel("/users/joshia5/new_mesh/ghosting.vtk", &mesh, false);
 
   return 0;
 }

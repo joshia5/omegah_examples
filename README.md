@@ -131,5 +131,6 @@ auto gravity_device = Write<Real> deep_copy(gravityArray_r, "gravity_device");
 
 - synchronization - 'sync_tag' can be called from host to synchronize the values of tags, for the entities lying on process boundry. 'vtk::write_parallel' can be called to write mesh for parallel code.
 
-- partitioning - ***More to follow***
-- ghosting - ***More to follow***
+- partitioning -  'balance' can be called from host to partition the mesh as per RIB. For predictive load balancing, mesh 'metric' tag has to be associated with vertices and then 'balance(1)' can be used.
+
+- ghosting - 'set_parting' can be called from host with the required number layers of ghost vertices as an argument
