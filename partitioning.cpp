@@ -19,11 +19,7 @@ int main(int argc, char** argv) {
   mesh.add_tag<Real>(0, "metric", 1);
 
   if (!rank) {
-    Write<Real> metricArray(mesh.nverts(), 1, "metricArray");
-    auto write_values = OMEGA_H_LAMBDA(LO i) {
-      if (i == 0) metricArray[i] = 0.5;
-    };
-    parallel_for(mesh.nverts(), write_values);
+    Write<Real> metricArray(mesh.nverts(), 1000000, "metricArray");
     auto metricArray_r = Reals(metricArray);
     mesh.set_tag<Real>(0, "metric", metricArray_r);
   }
@@ -34,8 +30,9 @@ int main(int argc, char** argv) {
   }
    
   MPI_Barrier(MPI_COMM_WORLD);
-  //mesh.sync_tag(0,"metric");
+  printf("before PLB, rank %d, nverts %d , nelems %d \n", rank, mesh.nverts(), mesh.nelems());
   mesh.balance(1);
+  printf("after PLB, rank %d, nverts %d , nelems %d \n", rank, mesh.nverts(), mesh.nelems());
   vtk::write_parallel("/users/joshia5/new_mesh/balance.vtk", &mesh, false);
 
   return 0;
