@@ -1,7 +1,7 @@
 #include <Omega_h_file.hpp>
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
-#include <Omega_h_for.hpp>
+#include <Omega_h_array_ops.hpp>
 using namespace Omega_h;
 
 int main(int argc, char** argv) {
@@ -16,24 +16,25 @@ int main(int argc, char** argv) {
   const auto rank = lib.world()->rank();
   const auto dim = mesh.dim();
 
-  mesh.add_tag<Real>(0, "metric", 1);
-
   if (!rank) {
-    Write<Real> metricArray(mesh.nverts(), 1000000, "metricArray");
-    auto metricArray_r = Reals(metricArray);
-    mesh.set_tag<Real>(0, "metric", metricArray_r);
+    Write<Real> weight_w(mesh.nelems(), 0.5);
+    auto weight_r = Reals(weight_w);
+    mesh.add_tag<Real>(dim, "weight", 1, weight_r);
   }
   else {
-    Write<Real> metricArray(mesh.nverts(), 1, "metricArray");
-    auto metricArray_r = Reals(metricArray);
-    mesh.set_tag<Real>(0, "metric", metricArray_r);
+    Write<Real> weight_w(mesh.nelems(), 1);
+    auto weight_r = Reals(weight_w);
+    mesh.add_tag<Real>(dim, "weight", 1, weight_r);
   }
    
   MPI_Barrier(MPI_COMM_WORLD);
-  printf("before PLB, rank %d, nverts %d , nelems %d \n", rank, mesh.nverts(), mesh.nelems());
-  mesh.balance(1);
-  printf("after PLB, rank %d, nverts %d , nelems %d \n", rank, mesh.nverts(), mesh.nelems());
-  vtk::write_parallel("/users/joshia5/new_mesh/balance.vtk", &mesh, false);
+  auto weight_array_0 = mesh.get_array<Real>(dim, "weight");
+  mesh.balance(weight_array_0);
+  auto weight_array_1 = mesh.get_array<Real>(dim, "weight");
 
+  auto sum_0 = get_sum(mesh.comm(),weight_array_0);
+  auto sum_1 = get_sum(mesh.comm(),weight_array_1);
+  assert (sum_0 == sum_1);
+  if (!rank) printf("sum before %3.3f, after %3.3f \n", sum_0, sum_1);
   return 0;
 }
