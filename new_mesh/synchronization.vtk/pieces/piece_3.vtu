@@ -1,0 +1,59 @@
+<VTKFile type="UnstructuredGrid" byte_order="LittleEndian" header_type="UInt64">
+<UnstructuredGrid>
+<Piece NumberOfPoints="4" NumberOfCells="2">
+<Cells>
+<DataArray type="Int8" Name="types" NumberOfComponents="1" format="binary">
+AgAAAAAAAAA=BQU=
+</DataArray>
+<DataArray type="Int32" Name="connectivity" NumberOfComponents="1" format="binary">
+GAAAAAAAAAA=AwAAAAEAAAAAAAAAAwAAAAAAAAACAAAA
+</DataArray>
+<DataArray type="Int32" Name="offsets" NumberOfComponents="1" format="binary">
+CAAAAAAAAAA=AwAAAAYAAAA=
+</DataArray>
+</Cells>
+<Points>
+<DataArray type="Float64" Name="coordinates" NumberOfComponents="3" format="binary">
+YAAAAAAAAAA=AAAAAAAA8D8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA4D8AAAAAAAAAAAAAAAAAAAAAAAAAAAAA8D8AAAAAAADgPwAAAAAAAAAAEAAAAAAA4D8AAAAAAADgPwAAAAAAAAAA
+</DataArray>
+</Points>
+<PointData>
+<DataArray type="Int64" Name="global" NumberOfComponents="1" format="binary">
+IAAAAAAAAAA=AQAAAAAAAAAFAAAAAAAAAAYAAAAAAAAACAAAAAAAAAA=
+</DataArray>
+<DataArray type="Int32" Name="local" NumberOfComponents="1" format="binary">
+EAAAAAAAAAA=AAAAAAEAAAACAAAAAwAAAA==
+</DataArray>
+<DataArray type="Int32" Name="owner" NumberOfComponents="1" format="binary">
+EAAAAAAAAAA=AwAAAAEAAAACAAAAAAAAAA==
+</DataArray>
+<DataArray type="Int8" Name="class_dim" NumberOfComponents="1" format="binary">
+BAAAAAAAAAA=AAAAAA==
+</DataArray>
+<DataArray type="Int32" Name="class_id" NumberOfComponents="1" format="binary">
+EAAAAAAAAAA=DwAAAAwAAAAQAAAAAgAAAA==
+</DataArray>
+<DataArray type="Float64" Name="gravity" NumberOfComponents="1" format="binary">
+IAAAAAAAAAA=AAAAAAAAAAAAAAAAAAAAAB+F61G4niNAAAAAAAAAAAA=
+</DataArray>
+</PointData>
+<CellData>
+<DataArray type="Int64" Name="global" NumberOfComponents="1" format="binary">
+EAAAAAAAAAA=BAAAAAAAAAAFAAAAAAAAAA==
+</DataArray>
+<DataArray type="Int32" Name="local" NumberOfComponents="1" format="binary">
+CAAAAAAAAAA=AAAAAAEAAAA=
+</DataArray>
+<DataArray type="Int32" Name="owner" NumberOfComponents="1" format="binary">
+CAAAAAAAAAA=AwAAAAMAAAA=
+</DataArray>
+<DataArray type="Int8" Name="class_dim" NumberOfComponents="1" format="binary">
+AgAAAAAAAAA=AgI=
+</DataArray>
+<DataArray type="Int32" Name="class_id" NumberOfComponents="1" format="binary">
+CAAAAAAAAAA=AgAAAAIAAAA=
+</DataArray>
+</CellData>
+</Piece>
+</UnstructuredGrid>
+</VTKFile>
