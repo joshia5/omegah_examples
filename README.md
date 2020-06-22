@@ -171,6 +171,6 @@ supports conversion from a `HostRead`.
 
 - synchronization - 'sync_tag' can be called from host to synchronize the values of tags, for the entities lying on process boundry. 'vtk::write_parallel' can be called to write mesh for parallel code.
 
-- partitioning -  'balance' can be called from host to partition the mesh as per RIB. For predictive load balancing, mesh 'metric' tag has to be associated with vertices and then 'balance(1)' can be used.
+- partitioning -  'balance' can be called from host to partition the mesh as per RIB. For predictive load balancing, mesh 'metric' tag has to be associated with vertices and then 'balance(1)' can be used.  Note, when increasing the number of parts ('splitting'), RIB requires the number of processes to be a power of 2.
 
 - ghosting - 'set_parting' can be called from host with the required number layers of ghost vertices as an argument
