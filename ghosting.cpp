@@ -16,8 +16,8 @@ int main(int argc, char** argv) {
   const auto rank = lib.world()->rank();
   const auto comm = lib.world();
 
-  MPI_Barrier(MPI_COMM_WORLD); 
-  mesh.set_parting(OMEGA_H_GHOSTED, 1, 1);
+  auto nlayers = 20;
+  mesh.set_parting(OMEGA_H_GHOSTED, nlayers, 0);
   MPI_Barrier(MPI_COMM_WORLD);
   vtk::write_parallel("/users/joshia5/new_mesh/ghosting.vtk", &mesh, false);
 

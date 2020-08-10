@@ -28,9 +28,9 @@ int main(int argc, char** argv) {
   }
 
   MPI_Barrier(MPI_COMM_WORLD);
-  vtk::write_parallel("/users/joshia5/omegah_examples/new_mesh/before_synchronization.vtk", &mesh, false);
+  vtk::write_parallel("/users/joshia5/new_mesh/before_synchronization.vtk", &mesh, false);
   mesh.sync_tag(0, "gravity");
-  vtk::write_parallel("/users/joshia5/omegah_examples/new_mesh/synchronization.vtk", &mesh, false);
+  vtk::write_parallel("/users/joshia5/new_mesh/synchronization.vtk", &mesh, false);
   
   return 0;
 }
