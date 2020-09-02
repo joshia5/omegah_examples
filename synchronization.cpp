@@ -47,13 +47,6 @@ int main(int argc, char** argv) {
   }
   else {
     Write<Real> gravityArray(mesh.nverts(), 0.0, "gravityArray");
-/*
-set tag values for serial test case
-    auto set_vals = OMEGA_H_LAMBDA(LO i) {
-      if ((i==0)||(i==1)||(i==4)) gravityArray[i] = 1;
-    };
-    parallel_for(gravityArray.size(), set_vals);
-*/
     Read<Real> gravityArray_r(gravityArray);
     mesh.set_tag<Real>(0, "gravity", gravityArray_r);
   }
@@ -64,35 +57,28 @@ set tag values for serial test case
   auto dist = mesh.ask_dist(0);
   printf("roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
 
-  if (rank == 1) {
-/*
-    auto vert_owners = mesh.ask_owners(0);
-    auto idxs = vert_owners.idxs;
-    auto ranks = vert_owners.ranks;
-    auto idxs_w = Write<LO> (idxs.size());
-    auto ranks_w = Write<LO> (idxs.size());
-    auto set_ownerVals = OMEGA_H_LAMBDA(LO i) {
-      if ((i==0)||(i==1)||(i==3)) {
-        idxs_w[0] = 1;
-        ranks_w[0] = 0;
-        idxs_w[1] = 0;
-        ranks_w[1] = 0;
-        idxs_w[3] = 2;
-        ranks_w[3] = 0;
-      }
-      else {
-        idxs_w[i] = idxs[i];
-        ranks_w[i] = ranks[i];
-      }
-    };
-    parallel_for(idxs.size(), set_ownerVals, "set_ownerVals");
-*/
-    mesh.set_owners(0, Remotes(LOs({0,0,0,0,0,0}), LOs({1,0,3,2,4,5})));
-    //mesh.set_owners(0, Remotes(read(ranks_w), read(idxs_w)));
-  //dist.set_roots2items(read(idxs_w));//does update nroots. cant determine if input is correct or not
-  //dist.set_dest_idxs(read(idxs_w), mesh.nverts());//has no effect on nroots
-  //sync dosent work in both cases
-  }
+  auto vert_owners = mesh.ask_owners(0);
+  auto idxs = vert_owners.idxs;
+  auto ranks = vert_owners.ranks;
+  auto idxs_w = Write<LO> (mesh.nverts());
+  auto ranks_w = Write<LO> (mesh.nverts());
+  auto set_ownerVals = OMEGA_H_LAMBDA(LO i) {
+    if (((i==0)||(i==1)||(i==3))&&(rank==1)) {
+      idxs_w[0] = 1;
+      ranks_w[0] = 0;
+      idxs_w[1] = 0;
+      ranks_w[1] = 0;
+      idxs_w[3] = 2;
+      ranks_w[3] = 0;
+    }
+    else {
+      idxs_w[i] = idxs[i];
+      ranks_w[i] = ranks[i];
+    }
+  };
+  parallel_for(idxs.size(), set_ownerVals, "set_ownerVals");
+
+  mesh.set_owners(0, Remotes(read(ranks_w), read(idxs_w)));
 
   mesh.sync_tag(0, "gravity");
   auto new_owners = mesh.ask_owners(0);
@@ -100,6 +86,5 @@ set tag values for serial test case
   print_owners(new_owners, rank);
   printf("new roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
   vtk::write_parallel("/users/joshia5/new_mesh/synchronization_2p_matched.vtk", &mesh, false);
-  
   return 0;
 }
