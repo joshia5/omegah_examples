@@ -5,6 +5,5 @@ function(mpi_test TESTNAME PROCS EXE)
   )
 endfunction(mpi_test)
 
-mpi_test(synchronization_2D 4  ./synchronization  ${CMAKE_SOURCE_DIR}/meshes/tri8_4p.osh)
-mpi_test(partitioning_2D 4  ./partitioning  ${CMAKE_SOURCE_DIR}/meshes/tri8_4p.osh)
-mpi_test(ghosting_2D 4  ./ghosting  ${CMAKE_SOURCE_DIR}/meshes/cube7k_4p.osh)
+mpi_test(sync_2D_2 2  ./synchronization /users/joshia5/new_mesh/tri8_2p.osh)
+mpi_test(sync_2D_4 4  ./sync_4p /space/joshia5/omegah_examples/meshes/tri8_4p.osh)

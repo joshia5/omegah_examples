@@ -30,5 +30,9 @@ int main(int argc, char** argv) {
   auto max_val = get_max(comm, for_max_r);
   assert (max_val == max_input);
 
+  auto owners = mesh.ask_owners(0);
+  mesh.set_owners(0,owners);
+  printf("oksetowners\n");
+
   return 0;
 }

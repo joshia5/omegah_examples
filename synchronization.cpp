@@ -2,7 +2,6 @@
 #include <Omega_h_library.hpp>
 #include <Omega_h_mesh.hpp>
 #include <Omega_h_for.hpp>
-#include "Omega_h_dist.hpp"
 using namespace Omega_h;
 
 void print_owners(Remotes owners, int rank) {
@@ -54,8 +53,8 @@ int main(int argc, char** argv) {
   vtk::write_parallel("/users/joshia5/new_mesh/before_synchronization_2p.vtk", &mesh, false);
   auto owners_old = mesh.ask_owners(0);
   print_owners(owners_old, rank);
-  auto dist = mesh.ask_dist(0);
-  printf("roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
+  //auto dist = mesh.ask_dist(0);
+  //printf("roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
 
   auto vert_owners = mesh.ask_owners(0);
   auto idxs = vert_owners.idxs;
@@ -84,7 +83,7 @@ int main(int argc, char** argv) {
   auto new_owners = mesh.ask_owners(0);
   printf("new owners\n");
   print_owners(new_owners, rank);
-  printf("new roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
+  //printf("new roots=%d, items=%d, srcs=%d, dests=%d\n", dist.nroots(), dist.nitems(), dist.nsrcs(), dist.ndests());
   vtk::write_parallel("/users/joshia5/new_mesh/synchronization_2p_matched.vtk", &mesh, false);
   return 0;
 }
